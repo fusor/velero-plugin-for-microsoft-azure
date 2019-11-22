@@ -1,0 +1,14 @@
+git checkout v1.2.0
+git checkout -b 1.2.0-rebase
+
+git cherry-pick 6cbe6415c9ef294d17b676c762634f93d41116eb # adding Dockerfile.ubi
+# had to fix Dockerfile.ubi for modules
+# commit df2536cc79791c8120e533d381544dcb36ce23fe # Update Dockerfile.ubi for go modules
+# discard this one, modify the above
+git cherry-pick 2a88b4fddb4ab9d27c4a6e196a354e1cb0b987c9 # Wait for snapshot to be ready before restoring
+# commit cf828939711cdcd4dd465cc6857386318a517737 # vendor files for azure plugin
+# discard, we're not using vendor files anymore
+git cherry-pick 4322e75881fa4a2d8cbef381304aa07376508819 # Add BZ automation to repo
+git cherry-pick 9ba0a2c86eab1117fb82f202f595a5673085e797 # Update PR-BZ automation mapping (#7)
+
+# new commit, rebase log
