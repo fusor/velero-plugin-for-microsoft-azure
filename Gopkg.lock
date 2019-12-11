@@ -456,7 +456,7 @@
   version = "kubernetes-1.15.3"
 
 [[projects]]
-  digest = "1:82aefa809ad4988dcbf0163b3f377be6a3baac6cddd8199af14b2a5683842ad6"
+  digest = "1:ab86115f275865b9dfb30a2956b069de3be83d2a576260b0b2257ff442f4d7d1"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/resource",
@@ -479,6 +479,7 @@
     "pkg/util/sets",
     "pkg/util/validation",
     "pkg/util/validation/field",
+    "pkg/util/wait",
     "pkg/watch",
     "third_party/forked/golang/reflect",
   ]
@@ -515,6 +516,7 @@
     "k8s.io/api/core/v1",
     "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured",
     "k8s.io/apimachinery/pkg/runtime",
+    "k8s.io/apimachinery/pkg/util/wait",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
