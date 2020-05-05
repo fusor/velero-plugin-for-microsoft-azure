@@ -14,15 +14,15 @@ Below is a listing of plugin versions and respective Velero versions that are co
 
 | Plugin Version  | Velero Version |
 |-----------------|----------------|
-| v1.0.0          | v1.2.0         |
+| v1.0.x          | v1.2.0         |
 
 ## Setup
 
 To set up Velero on Azure, you:
 
-* [Create an Azure storage account and blob container][1]
-* [Set permissions for Velero][2]
-* [Install and start Velero][3]
+- [Create an Azure storage account and blob container][1]
+- [Set permissions for Velero][2]
+- [Install and start Velero][3]
 
 If you do not have the `az` Azure CLI 2.0 installed locally, follow the [install guide][18] to set it up.
 
@@ -32,7 +32,7 @@ Run:
 az login
 ```
 
-## Create Azure storage account and blob container
+## Setup Azure storage account and blob container
 
 ### (Optional) Change to the Azure subscription you want to create your backups in
 
@@ -99,7 +99,6 @@ BLOB_CONTAINER=velero
 az storage container create -n $BLOB_CONTAINER --public-access off --account-name $AZURE_STORAGE_ACCOUNT_ID
 ```
 
-
 ## Set permissions for Velero
 
 ### Kubernetes cluster prerequisites
@@ -145,14 +144,16 @@ To integrate Velero with Azure, you must create a Velero-specific [service princ
     If you'll be using Velero to backup multiple clusters with multiple blob containers, it may be desirable to create a unique username per cluster rather than the default `velero`.
 
     Create service principal and let the CLI generate a password for you. Make sure to capture the password.
-    
+
     _(Optional) If you are using a different Subscription for backups and cluster resources, make sure to specify both subscriptions
     in the `az` command using `--scopes`._
 
     ```bash
     AZURE_CLIENT_SECRET=`az ad sp create-for-rbac --name "velero" --role "Contributor" --query 'password' -o tsv \
-      [--scopes /subscriptions/$AZURE_BACKUP_SUBSCRIPTION_ID /subscriptions/$AZURE_SUBSCRIPTION_ID]`
+      --scopes  /subscriptions/$AZURE_SUBSCRIPTION_ID[ /subscriptions/$AZURE_BACKUP_SUBSCRIPTION_ID]`
     ```
+
+    NOTE: Ensure that value for `--name` does not conflict with other service principals/app registrations.
 
     After creating the service principal, obtain the client id.
 
@@ -162,7 +163,7 @@ To integrate Velero with Azure, you must create a Velero-specific [service princ
 
 1. Now you need to create a file that contains all the environment variables you just set. The command looks like the following:
 
-    ```
+```bash
     cat << EOF  > ./credentials-velero
     AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
     AZURE_TENANT_ID=${AZURE_TENANT_ID}
@@ -171,9 +172,9 @@ To integrate Velero with Azure, you must create a Velero-specific [service princ
     AZURE_RESOURCE_GROUP=${AZURE_RESOURCE_GROUP}
     AZURE_CLOUD_NAME=AzurePublicCloud
     EOF
-    ```
+```
 
-    > available `AZURE_CLOUD_NAME` values: `AzurePublicCloud`, `AzureUSGovernmentCloud`, `AzureChinaCloud`, `AzureGermanCloud`
+> available `AZURE_CLOUD_NAME` values: `AzurePublicCloud`, `AzureUSGovernmentCloud`, `AzureChinaCloud`, `AzureGermanCloud`
 
 ## Install and start Velero
 
@@ -184,7 +185,7 @@ Install Velero, including all prerequisites, into the cluster and start the depl
 ```bash
 velero install \
     --provider azure \
-    --plugins velero/velero-plugin-for-microsoft-azure:v1.0.0 \
+    --plugins velero/velero-plugin-for-microsoft-azure:v1.0.1 \
     --bucket $BLOB_CONTAINER \
     --secret-file ./credentials-velero \
     --backup-location-config resourceGroup=$AZURE_BACKUP_RESOURCE_GROUP,storageAccount=$AZURE_STORAGE_ACCOUNT_ID[,subscriptionId=$AZURE_BACKUP_SUBSCRIPTION_ID] \
